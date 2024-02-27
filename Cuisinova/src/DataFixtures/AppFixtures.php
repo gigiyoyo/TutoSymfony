@@ -24,7 +24,7 @@ class AppFixtures extends Fixture
             $recipe = new Recipe();
             $recipe->setTitle(ucfirst($this->faker->words(2, true)));
             $slugger = new AsciiSlugger();
-            $recipe->setSlug($slugger->slug($recipe->getTitle()));
+            $recipe->setSlug($slugger->slug($recipe->getTitle())->lower());
             $recipe->setContent($this->faker->paragraph(2, false));
             $recipe->setCreatedAt(new \DateTimeImmutable());
             $recipe->setUpdatedAt(new \DateTimeImmutable());
