@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recettes{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="text-align">Toutes les recettes</h1>
+
+    <p>
+        <ul>
+            {% for recipe in recipes %}
+                <li>
+                    <a href="{{ url('recipe_show', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </p>
+</div>
+{% endblock %}
