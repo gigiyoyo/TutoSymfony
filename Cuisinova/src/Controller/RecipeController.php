@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
+use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
+use function PHPUnit\Framework\returnSelf;
 
 class RecipeController extends AbstractController
 {
@@ -36,6 +39,16 @@ class RecipeController extends AbstractController
         }
         return $this->render('recipe/show.html.twig', [
             'recipe' => $recipe
+        ]);
+    }
+
+    #[Route('/recipes/{id}/edit', name: 'recipe_edit', requirements: ['id'=>'\d+'])]
+    public function edit(Recipe $recipe) : Response
+    {
+        $form = $this->createForm(RecipeType::class, $recipe);
+        return $this->render('recipe/edit.html.twig', [
+            'recipe' => $recipe,
+            'form' => $form
         ]);
     }
 }
