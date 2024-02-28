@@ -7,6 +7,8 @@
 
     <p><i> Plus de {{total}} min de recettes partagées !</i>🤤</p>
 
+    <a class="btn btn-success" href="{{ url('recipe_create') }}">Créer une nouvelle recette</a>
+    
     <table class="table table-striped">
         <thead>
             <th>Titre</th>
@@ -16,7 +18,7 @@
             {% for recipe in recipes %}
                 <tr>
                     <td><a href="{{ url('recipe_show', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a></td>
-                    <td><a class="btn btn-primary" href="{{ url('recipe_edit', {'id': recipe.id}) }}">Editer</a></td>
+                    <td><a class="btn btn-primary btn-sm" href="{{ url('recipe_edit', {'id': recipe.id}) }}">Editer</a></td>
                 </tr>
             {% endfor %}
         </tbody>
