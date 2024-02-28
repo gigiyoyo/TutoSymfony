@@ -12,8 +12,11 @@
         <header>
             {% include "partials/_header.html.twig" %}
         </header>
+        
+        <div class="container my-4">
         {% include "partials/_flash.html.twig" %}
         {% block body %}{% endblock %}
+        </div>
     </body>
     
     {% block javascripts %}
