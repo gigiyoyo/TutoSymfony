@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Recipe;
 use App\Repository\RecipeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,14 @@ class RecipeController extends AbstractController
     public function index(RecipeRepository $recipeRepository): Response
     {
         $recipes = $recipeRepository->findAll();
+        $total = $recipeRepository->findTotalDuration();
 
         // Récupérer les recettes dont la durée est inférieure à une valeur données
         // $recipes = $recipeRepository->findWithDurationLowerThan(10);
 
         return $this->render('recipe/index.html.twig', [
             'recipes' => $recipes,
+            'total' => $total,
         ]);
     }
 

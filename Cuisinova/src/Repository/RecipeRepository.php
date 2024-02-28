@@ -22,7 +22,7 @@ class RecipeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find some recipes by 
+     * Find some recipes by duration
      *
      * @param integer $duration
      * @return Recipe[]
@@ -35,6 +35,19 @@ class RecipeRepository extends ServiceEntityRepository
                     ->setParameter('duration', $duration)
                     ->getQuery()
                     ->getResult();
+    }
+
+    /**
+     * Find total duration for recipes
+     *
+     * @return integer
+     */
+    public function findTotalDuration() : int
+    {
+        return $this->createQueryBuilder('r')
+                    ->select('SUM(r.duration) as total')
+                    ->getQuery()
+                    ->getSingleScalarResult();
     }
 
 //    /**
