@@ -15,6 +15,10 @@ class RecipeController extends AbstractController
     public function index(RecipeRepository $recipeRepository): Response
     {
         $recipes = $recipeRepository->findAll();
+
+        // Récupérer les recettes dont la durée est inférieure à une valeur données
+        // $recipes = $recipeRepository->findWithDurationLowerThan(10);
+
         return $this->render('recipe/index.html.twig', [
             'recipes' => $recipes,
         ]);
