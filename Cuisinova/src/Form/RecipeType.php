@@ -3,16 +3,17 @@
 namespace App\Form;
 
 use App\Entity\Recipe;
+use function PHPUnit\Framework\isNull;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-use function PHPUnit\Framework\isNull;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class RecipeType extends AbstractType
 {
@@ -20,40 +21,38 @@ class RecipeType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('slug')
+            ->add('slug', TextType::class, [
+                'required' => false
+            ])
             ->add('content')
             ->add('duration')
             ->add('save', SubmitType::class)
             ->addEventListener(FormEvents::PRE_SUBMIT, $this->autoSlug(...)) # Collable
-            ->addEventListener(FormEvents::POST_SUBMIT, $this->autoCreatedDate(...))
-            ->addEventListener(FormEvents::POST_SUBMIT, $this->autoUpdatedDate(...));
+            ->addEventListener(FormEvents::POST_SUBMIT, $this->attachTimestamps(...));
         ;
     }
 
     public function autoSlug(PreSubmitEvent $event): void {
         $data = $event->getData();
         
-        if(trim($data['slug']) === ""){         # or if(empty($data['slug']))
+        if(empty($data['slug'])){ 
             $slugger = new AsciiSlugger();
             $data['slug'] = $slugger->slug($data['title'])->lower();
             $event->setData($data);
         }
     }
 
-    public function autoCreatedDate(PostSubmitEvent $event): void {
+    public function attachTimestamps(PostSubmitEvent $event): void {
         $data  = $event->getData();
         // dd($data);
-        if (isNull($data->getCreatedAt())) {
-            $data->setCreatedAt(new \DateTimeImmutable());
+        if (!($data instanceof Recipe)){    # S'assurer qu'on a affaire à une instance de Recipe
+            return;
         }
-        // dd($data);
-    }
 
-    public function autoUpdatedDate(PostSubmitEvent $event): void {
-        $data  = $event->getData();
+        $data->setUpdatedAt(new \DateTimeImmutable());      # Actualiser automatiquement la date de mise à jour
 
-        if (isNull($data->getUpdatedAt())) {
-            $data->setUpdatedAt(new \DateTimeImmutable());
+        if(!$data->getId()){
+            $data->setCreatedAt(new \DateTimeImmutable());      # Ajouter la date de création dans le cas d'une nouvelle recette
         }
     }
 
