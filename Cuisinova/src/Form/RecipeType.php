@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class RecipeType extends AbstractType
 {
@@ -24,7 +25,7 @@ class RecipeType extends AbstractType
             ->add('slug', TextType::class, [
                 'required' => false
             ])
-            ->add('content')
+            ->add('content', TextareaType::class)
             ->add('duration')
             ->add('save', SubmitType::class)
             ->addEventListener(FormEvents::PRE_SUBMIT, $this->autoSlug(...)) # Collable

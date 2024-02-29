@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\RecipeRepository;
+use App\Validator\BanWord;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -21,11 +22,13 @@ class Recipe
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5, minMessage: "Le titre est trop court. Il devrait comporter 5 caractères ou plus.")]
+    #[BanWord()]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5, minMessage: "Cette valeur est trop courte. Elle devrait comporter 5 caractères ou plus.")]
     #[Assert\Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', message: "Cette valeur n'est pas valide.")]
+    #[BanWord()]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
